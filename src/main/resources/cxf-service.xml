@@ -29,7 +29,7 @@
 
     <bean id="serviceBean" class="org.acme.SoknadService"/>
 
-    <jaxrs:server address="https://localhost:8080/">
+    <jaxrs:server address="http://localhost:8080/">
         <jaxrs:serviceBeans>
             <ref bean="serviceBean"/>
         </jaxrs:serviceBeans>

@@ -20,7 +20,7 @@ import java.util.List;
 
 class SpringApplicationTests {
 
-	static String address = "https://localhost:8080/soknad/";
+	static String address = "http://localhost:8080/soknad/";
 	static WebClient client;
 
 	@BeforeAll
