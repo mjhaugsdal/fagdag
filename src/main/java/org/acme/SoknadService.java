@@ -1,24 +1,24 @@
 package org.acme;
 
 import ch.qos.logback.classic.Logger;
+import io.swagger.v3.oas.annotations.Operation;
 import org.acme.model.Lanetaker;
 import org.acme.model.Soknad;
 import org.acme.model.SoknadSvar;
-import io.swagger.v3.oas.annotations.Operation;
 import org.acme.validate.PersonNummerValidator;
 import org.apache.cxf.jaxrs.utils.JAXRSUtils;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
+import org.ff4j.FF4j;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -26,6 +26,9 @@ import java.util.concurrent.atomic.AtomicLong;
 @Path("/soknad")
 public class SoknadService {
 
+
+    @Autowired
+    FF4j ff4j;
 
     private static final Logger logger
             = (Logger) LoggerFactory.getLogger(SoknadService.class);
@@ -40,6 +43,10 @@ public class SoknadService {
      *
      * */
     private static final AtomicLong idCounter = new AtomicLong();
+
+    public SoknadService(FF4j ff4j) {
+        this.ff4j = ff4j;
+    }
 
     /***
      * inkrementerer og henter et id-nummer.
@@ -61,7 +68,7 @@ public class SoknadService {
     @Operation(description = "Søknadslevering")
     public SoknadSvar postSoknad(final Soknad soknad) {
 
-        for(Lanetaker lanetaker : soknad.getLanetakere()) {
+        for (Lanetaker lanetaker : soknad.getLanetakere()) {
             if (!PersonNummerValidator.isValidNIN(lanetaker.getFnr())) {
                 return new SoknadSvar("", "Ikke gyldig personnnummer på lånetaker");
             }
@@ -73,7 +80,7 @@ public class SoknadService {
         try {
             logger.info(soknad.toString());
         } catch (Exception ex) {
-            logger.warn("Caught exception while trying to print object: " +  ex.getMessage());
+            logger.warn("Caught exception while trying to print object: " + ex.getMessage());
         }
         return new SoknadSvar(id, "Mottatt");
     }
@@ -89,23 +96,27 @@ public class SoknadService {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Hent søknad")
-    public SoknadSvar getSoknad(
+    public Response getSoknad(
             @QueryParam("id") final String id
     ) {
-        if (!id.isEmpty()) {
-            if (!soknadMap.containsKey(id)) {
-                logger.info("Application with given id {} not stored", id);
+
+        if(ff4j.getFeature("getSoknad").isEnable()) {
+            if (!id.isEmpty()) {
+                if (!soknadMap.containsKey(id)) {
+                    logger.info("Application with given id {} not stored", id);
+                    logMetaInfo(JAXRSUtils.getCurrentMessage());
+                    return Response.ok(new SoknadSvar(id, "Ukjent")).build();
+                } else {
+                    return Response.ok(new SoknadSvar(id, "Mottatt")).build();
+                }
+            } else {
+                logger.info("Id not given");
                 logMetaInfo(JAXRSUtils.getCurrentMessage());
-                return new SoknadSvar(id, "Ukjent");
-            }
-            else {
-                return new SoknadSvar(id, "Mottatt");
+                return Response.ok(new SoknadSvar(id, "Ukjent")).build();
             }
         }
         else {
-            logger.info("Id not given");
-            logMetaInfo(JAXRSUtils.getCurrentMessage());
-            return new SoknadSvar("", "Ukjent");
+            return Response.status(501).build();
         }
     }
 
