@@ -18,8 +18,8 @@ Kan også kjøres i docker container
 
 ```bash
 $ mvn clean package
-$ docker build --tag myApp .
-$ docker run -p 8080:8080 myApp
+$ docker build --tag my-app .
+$ docker run -p 8080:8080 my-app
 ```
 
 ## Dokumentasjon

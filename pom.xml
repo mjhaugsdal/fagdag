@@ -11,7 +11,7 @@
 	<artifactId>myApp</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>11</java.version>
 		<version.cxf>3.4.3</version.cxf>
 		<spring.version>2.4.5</spring.version>
 		<version.jetty>9.4.40.v20210413</version.jetty>
