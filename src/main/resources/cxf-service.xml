@@ -27,23 +27,23 @@
         </cxf:properties>
     </cxf:bus>
 
-    <bean id="serviceBean" class="org.acme.SoknadService"/>
+<!--    <bean id="serviceBean" class="org.acme.SoknadService"/>-->
 
-    <jaxrs:server address="http://localhost:8080/">
-        <jaxrs:serviceBeans>
-            <ref bean="serviceBean"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:features>
-            <bean class="org.apache.cxf.jaxrs.openapi.OpenApiFeature">
-                <property name="title" value="CXF Quickstarts" />
-                <property name="description" value="Sample REST-based Service" />
-                <property name="version" value="1" />
-            </bean>
-        </jaxrs:features>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-        </jaxrs:providers>
-    </jaxrs:server>
+<!--    <jaxrs:server address="http://localhost:8080/">-->
+<!--        <jaxrs:serviceBeans>-->
+<!--            <ref bean="serviceBean"/>-->
+<!--        </jaxrs:serviceBeans>-->
+<!--        <jaxrs:features>-->
+<!--            <bean class="org.apache.cxf.jaxrs.openapi.OpenApiFeature">-->
+<!--                <property name="title" value="CXF Quickstarts" />-->
+<!--                <property name="description" value="Sample REST-based Service" />-->
+<!--                <property name="version" value="1" />-->
+<!--            </bean>-->
+<!--        </jaxrs:features>-->
+<!--        <jaxrs:providers>-->
+<!--            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>-->
+<!--        </jaxrs:providers>-->
+<!--    </jaxrs:server>-->
 
 </beans>
 

@@ -9,6 +9,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.ws.rs.core.MediaType;
 import java.io.FileNotFoundException;
@@ -18,14 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@SpringBootTest
 class SpringApplicationTests {
 
-	static String address = "http://localhost:8080/soknad/";
+	static String address = "http://localhost:8081/soknad/";
 	static WebClient client;
 
 	@BeforeAll
 	static void contextLoads() {
-		SpringApplication.main(null);
+		//SpringApplication.main(new String[0]);
+
+		//SpringApplication.main(new String[0]);
 		List<Object> providers = new ArrayList<Object>();
 		providers.add(new JacksonJsonProvider());
 		client = WebClient.create(address, providers, "./client.xml");
