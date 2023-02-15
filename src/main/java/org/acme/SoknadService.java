@@ -5,7 +5,7 @@ import org.acme.model.Lanetaker;
 import org.acme.model.Soknad;
 import org.acme.model.SoknadSvar;
 import io.swagger.v3.oas.annotations.Operation;
-import no.bekk.bekkopen.person.FodselsnummerValidator;
+import org.acme.validate.PersonNummerValidator;
 import org.apache.cxf.jaxrs.utils.JAXRSUtils;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
@@ -62,7 +62,7 @@ public class SoknadService {
     public SoknadSvar postSoknad(final Soknad soknad) {
 
         for(Lanetaker lanetaker : soknad.getLanetakere()) {
-            if (!FodselsnummerValidator.isValid(lanetaker.getFnr())) {
+            if (!PersonNummerValidator.isValidNIN(lanetaker.getFnr())) {
                 return new SoknadSvar("", "Ikke gyldig personnnummer på lånetaker");
             }
         }
